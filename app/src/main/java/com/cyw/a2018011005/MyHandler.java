@@ -34,54 +34,48 @@ public class MyHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         //Log.d("NET", qName);
-        if (qName.equals("item") )
+        switch(qName)
         {
-            isItem = true;
-            item = new Mobile01NewsItem();
+            case "title":
+                isTitle = true;
+                break;
+            case "item":
+                isItem = true;
+                item = new Mobile01NewsItem();
+                break;
+            case "link":
+                isLink = true;
+                break;
+            case "description":
+                isDesc = true;
+                break;
         }
-        if (qName.equals("title") )
-        {
-            isTitle = true;
-        }
-        if (qName.equals("link") )
-        {
-            isLink = true;
-        }
-        if (qName.equals("description") )
-        {
-            isDesc = true;
-        }
-
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
-        if (qName.equals("item") )
+        switch(qName)
         {
-            isItem = false;
-            newsItems.add(item);
+            case "title":
+                isTitle = false;
+                break;
+            case "item":
+                isItem = false;
+                newsItems.add(item);//xml中item開頭item結束,資料都在中間, 所以在start時New, 在end時加入資料'
+                break;
+            case "link":
+                isLink = false;
+                if (isItem)
+                {
+                    item.link = linkSB.toString();
+                    linkSB = new StringBuilder();
+                }
+                break;
+            case "description":
+                isDesc = false;
+                break;
         }
-        if (qName.equals("title"))
-        {
-            isTitle = false;
-        }
-        if (qName.equals("link") )
-        {
-            isLink = false;
-            //因為抓下來分三段,所以在characters那邊先用StringBuilder接好
-            if (isItem) {
-                item.link = linkSB.toString();
-                Log.d("NET_link", linkSB.toString());
-                linkSB = new StringBuilder();
-            }
-
-        }
-        if (qName.equals("description") )
-        {
-            isDesc = false;
-        }
-
     }
 
     @Override
