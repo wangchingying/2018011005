@@ -19,7 +19,14 @@ public class MyHandler extends DefaultHandler {
 
     boolean isTitle = false;
     boolean isItem = false;
+    boolean isLink = false;
+    boolean isDesc = false;
+    boolean isImg = false;
+    StringBuilder linkSB = new StringBuilder();
     public ArrayList<String> titles = new ArrayList<>();
+    public ArrayList<String> links = new ArrayList<>();
+    public ArrayList<String> imgs = new ArrayList<>();
+    public ArrayList<String> descriptions = new ArrayList<>();
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
@@ -32,6 +39,15 @@ public class MyHandler extends DefaultHandler {
         {
             isTitle = true;
         }
+        if (qName.equals("link") )
+        {
+            isLink = true;
+        }
+        if (qName.equals("description") )
+        {
+            isDesc = true;
+        }
+
     }
 
     @Override
@@ -45,6 +61,22 @@ public class MyHandler extends DefaultHandler {
         {
             isTitle = false;
         }
+        if (qName.equals("link") )
+        {
+            isLink = false;
+            //因為抓下來分三段,所以在characters那邊先用StringBuilder接好
+            if (isItem) {
+                links.add(linkSB.toString());
+                Log.d("NET_link", linkSB.toString());
+                linkSB = new StringBuilder();
+            }
+
+        }
+        if (qName.equals("description") )
+        {
+            isDesc = false;
+        }
+
     }
 
     @Override
@@ -55,6 +87,18 @@ public class MyHandler extends DefaultHandler {
             Log.d("NET", new String(ch, start, length));
             titles.add(new String(ch, start, length));
         }
+        if (isLink && isItem)
+        {
+            linkSB.append(new String(ch, start, length));
+            //Log.d("NET2", linkSB.toString());
+
+        }
+        if (isDesc)
+        {
+            Log.d("NET_desc", new String(ch, start, length));
+            descriptions.add(new String(ch, start, length));
+        }
+
 
     }
 
