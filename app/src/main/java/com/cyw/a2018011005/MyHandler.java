@@ -23,10 +23,13 @@ public class MyHandler extends DefaultHandler {
     boolean isDesc = false;
     boolean isImg = false;
     StringBuilder linkSB = new StringBuilder();
-    public ArrayList<String> titles = new ArrayList<>();
-    public ArrayList<String> links = new ArrayList<>();
-    public ArrayList<String> imgs = new ArrayList<>();
-    public ArrayList<String> descriptions = new ArrayList<>();
+//    public ArrayList<String> titles = new ArrayList<>();
+//    public ArrayList<String> links = new ArrayList<>();
+//    public ArrayList<String> imgs = new ArrayList<>();
+//    public ArrayList<String> descriptions = new ArrayList<>();
+    public ArrayList<Mobile01NewsItem> newsItems = new ArrayList<>();
+    Mobile01NewsItem item;
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
@@ -34,6 +37,7 @@ public class MyHandler extends DefaultHandler {
         if (qName.equals("item") )
         {
             isItem = true;
+            item = new Mobile01NewsItem();
         }
         if (qName.equals("title") )
         {
@@ -56,6 +60,7 @@ public class MyHandler extends DefaultHandler {
         if (qName.equals("item") )
         {
             isItem = false;
+            newsItems.add(item);
         }
         if (qName.equals("title"))
         {
@@ -66,7 +71,7 @@ public class MyHandler extends DefaultHandler {
             isLink = false;
             //因為抓下來分三段,所以在characters那邊先用StringBuilder接好
             if (isItem) {
-                links.add(linkSB.toString());
+                item.link = linkSB.toString();
                 Log.d("NET_link", linkSB.toString());
                 linkSB = new StringBuilder();
             }
@@ -85,7 +90,7 @@ public class MyHandler extends DefaultHandler {
         if (isTitle && isItem)
         {
             Log.d("NET", new String(ch, start, length));
-            titles.add(new String(ch, start, length));
+            item.title=new String(ch, start, length);
         }
         if (isLink && isItem)
         {
@@ -96,7 +101,7 @@ public class MyHandler extends DefaultHandler {
         if (isDesc)
         {
             Log.d("NET_desc", new String(ch, start, length));
-            descriptions.add(new String(ch, start, length));
+
         }
 
 
