@@ -32,7 +32,8 @@ import javax.xml.parsers.SAXParserFactory;
 public class MainActivity extends AppCompatActivity {
     //Intent it;
     ListView lv;
-    ArrayAdapter<String> adapter;
+    //ArrayAdapter<String> adapter; 改成baseAdapter
+    MyAdapter adapter;
     Intent it;
     MyHandler dataHandler; //這個移到外面宣告, intent才抓地到
     @Override
@@ -97,13 +98,14 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    String data[] = new String[dataHandler.newsItems.size()];
-                                    for (int i=0;i<data.length;i++)
-                                    {
-                                        data[i] = dataHandler.newsItems.get(i).title;
-                                    }
-                                    adapter = new ArrayAdapter<String>(MainActivity.this,
-                                            android.R.layout.simple_list_item_1, data);
+                                    adapter=new MyAdapter(MainActivity.this,dataHandler.newsItems);
+//                                    String data[] = new String[dataHandler.newsItems.size()];
+//                                    for (int i=0;i<data.length;i++)
+//                                    {
+//                                        data[i] = dataHandler.newsItems.get(i).title;
+//                                    }
+//                                    adapter = new ArrayAdapter<String>(MainActivity.this,
+//                                            android.R.layout.simple_list_item_1, data);data
                                     lv.setAdapter(adapter);
 
                                 }
@@ -133,8 +135,5 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void click1(View v)
-    {
 
-    }
 }

@@ -10,6 +10,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Student on 2018/1/10.
@@ -22,6 +24,7 @@ public class MyHandler extends DefaultHandler {
     boolean isLink = false;
     boolean isDesc = false;
     boolean isImg = false;
+    StringBuilder descSB = new StringBuilder();
     StringBuilder linkSB = new StringBuilder();
 //    public ArrayList<String> titles = new ArrayList<>();
 //    public ArrayList<String> links = new ArrayList<>();
@@ -48,6 +51,7 @@ public class MyHandler extends DefaultHandler {
                 break;
             case "description":
                 isDesc = true;
+
                 break;
         }
     }
@@ -74,6 +78,22 @@ public class MyHandler extends DefaultHandler {
                 break;
             case "description":
                 isDesc = false;
+                if (isItem) {
+                    String str = descSB.toString();
+                    descSB = new StringBuilder();
+                    Log.d("NET", "end Element str:" + str);
+                    Pattern pattern = Pattern.compile("https.*jpg");
+                    Matcher m = pattern.matcher(str);
+                    String imgurl = "";
+                    if (m.find()) {
+                        imgurl = m.group(0);
+                    }
+                    str = str.replaceAll("<img.*/>", "");
+                    item.description = str;
+                    item.imgurl = imgurl;
+                    Log.d("NET", "In Handler: Item.desc:" + item.description);
+                    Log.d("NET", "In Handler: Item.imgurl:" + item.imgurl);
+                }
                 break;
         }
     }
@@ -92,9 +112,11 @@ public class MyHandler extends DefaultHandler {
             //Log.d("NET2", linkSB.toString());
 
         }
-        if (isDesc)
-        {
-            Log.d("NET_desc", new String(ch, start, length));
+        if (isDesc && isItem)
+        {   //description
+            descSB.append(new String(ch, start, length));
+
+
 
         }
 

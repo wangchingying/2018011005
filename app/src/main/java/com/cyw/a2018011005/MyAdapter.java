@@ -1,21 +1,36 @@
 package com.cyw.a2018011005;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 /**
  * Created by Student on 2018/1/11.
  */
 
 public class MyAdapter extends BaseAdapter {
+
+    Context context;
+    ArrayList<Mobile01NewsItem> mylist;
+    //建構式
+    public MyAdapter(Context context, ArrayList<Mobile01NewsItem> mylist)
+    {
+        this.context = context;
+        this.mylist = mylist;
+    }
     @Override
     public int getCount() {
-        return 0;
+        return mylist.size();
     }
 
     @Override
@@ -30,10 +45,30 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        ViewHolder viewHolder;
+        if(view==null)
+        {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            view = inflater.inflate(R.layout.myitem, null);
+            viewHolder =new ViewHolder();
+            viewHolder.tv1 = view.findViewById(R.id.textView);
+            viewHolder.tv2 = view.findViewById(R.id.textView2);
+            viewHolder.img1 = view.findViewById(R.id.imageView);
+            view.setTag(viewHolder);
+
+        }
+        else
+        {
+            viewHolder=(ViewHolder)view.getTag();
+        }
+        viewHolder.tv1.setText(mylist.get(i).title);
+        viewHolder.tv2.setText(mylist.get(i).description);
+        Picasso.with(context).load(mylist.get(i).imgurl).into(viewHolder.img1);
+
+        return view;
     }
 
-    static void viewHorder()
+    static class ViewHolder
     {
         TextView tv1;
         TextView tv2;
